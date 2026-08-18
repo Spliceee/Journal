@@ -38,14 +38,13 @@ function confirmDialog(message, opts = {}) {
     const yesInner = icons ? icon('check', 20) : escapeHtml(confirmLabel);
     const body = el(`
       <div>
-        <p style="font-size:14px;font-weight:700;color:var(--ink);margin:0 0 18px;">${escapeHtml(message)}</p>
         <div style="display:flex;gap:10px;">
           <button class="btn secondary block" id="cf-no">${noInner}</button>
           <button class="btn ${danger ? 'danger' : ''} block" id="cf-yes">${yesInner}</button>
         </div>
       </div>
     `);
-    const { close } = openSheet('', body);
+    const { close } = openSheet(message, body);
     body.querySelector('#cf-no').addEventListener('click', () => { close(); resolve(false); });
     body.querySelector('#cf-yes').addEventListener('click', () => { close(); resolve(true); });
   });
