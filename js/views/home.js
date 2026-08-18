@@ -98,8 +98,8 @@ const HomeView = (() => {
     body.appendChild(avatarField);
     body.appendChild(nameField);
     body.appendChild(birthdayField);
-    body.appendChild(messageField);
     body.appendChild(goalField);
+    body.appendChild(messageField);
     body.appendChild(saveBtn);
     body.appendChild(signOutBtn);
     openSheet('แก้ไขโปรไฟล์', body);
