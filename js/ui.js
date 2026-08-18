@@ -256,8 +256,18 @@ function openLightbox(photos, startIndex = 0, meta = null, actions = null) {
     if (meta.text) caption.querySelector('.lb-text').textContent = meta.text;
   }
 
+  // Very tall uploads (e.g. 9:16 phone screenshots) leave huge letterbox
+  // bars in the popup; crop those down to a friendlier 3:4 in this view only.
+  imgEl.addEventListener('load', () => {
+    const w = imgEl.naturalWidth;
+    const h = imgEl.naturalHeight;
+    const tall = w > 0 && h / w >= 1.5;
+    media.classList.toggle('lb-media-cropped', tall);
+  });
+
   function render() {
     const p = photos[idx];
+    media.classList.remove('lb-media-cropped');
     imgEl.src = photoUrl(p);
     counter.textContent = `${idx + 1} / ${photos.length}`;
     const multi = photos.length > 1;
