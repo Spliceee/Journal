@@ -49,6 +49,12 @@ const DiaryView = (() => {
       const text = body.querySelector('#f-text').value.trim();
       const mood = mp.getValue();
       const { keepIds, newFiles } = pp.getState();
+      const keptCount = (existing ? existing.photos || [] : []).filter((p) => keepIds.includes(p.id)).length;
+
+      if (!title && !text && !mood && keptCount === 0 && newFiles.length === 0) {
+        toast('กรุณาใส่ข้อมูลก่อนบันทึก');
+        return;
+      }
 
       saveBtn.disabled = true;
       saveBtn.textContent = 'กำลังบันทึก...';
