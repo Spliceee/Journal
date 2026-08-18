@@ -39,6 +39,13 @@ async function settingsPut(obj) {
   if (error) throw error;
   return obj;
 }
+/* Update several settings keys in one atomic auth.updateUser() call — firing
+ * multiple settingsPut() calls concurrently races on the client's cached user
+ * state and silently drops fields, so batch writes must go through here. */
+async function setSettings(values) {
+  const { error } = await sb.auth.updateUser({ data: values });
+  if (error) throw error;
+}
 
 const DB = {
   uid() {

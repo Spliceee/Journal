@@ -14,9 +14,6 @@ const HomeView = (() => {
     const rec = await DB.get('settings', key);
     return rec ? rec.value : fallback;
   }
-  async function setSetting(key, value) {
-    await DB.put('settings', { key, value });
-  }
 
   async function loadProfile() {
     const [name, avatar, birthday, message, goal] = await Promise.all([
@@ -80,13 +77,13 @@ const HomeView = (() => {
         avatar = await uploadPhoto(newFiles[0]);
       }
 
-      await Promise.all([
-        setSetting('userName', newName),
-        setSetting('userAvatar', avatar),
-        setSetting('userBirthday', newBirthday),
-        setSetting('userMessage', newMessage),
-        setSetting('userGoal', newGoal),
-      ]);
+      await setSettings({
+        userName: newName,
+        userAvatar: avatar,
+        userBirthday: newBirthday,
+        userMessage: newMessage,
+        userGoal: newGoal,
+      });
       closeSheet();
       toast('บันทึกโปรไฟล์แล้ว');
       if (rootEl) renderAll(rootEl);
