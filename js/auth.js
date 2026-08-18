@@ -57,7 +57,7 @@ const AuthView = (() => {
 
       const { data, error } = mode === 'signin'
         ? await sb.auth.signInWithPassword({ email, password })
-        : await sb.auth.signUp({ email, password });
+        : await sb.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
 
       submitBtn.disabled = false;
       applyMode();
