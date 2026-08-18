@@ -56,6 +56,13 @@ const DiaryView = (() => {
         return;
       }
 
+      if (!mood && (title || text)) {
+        const goPick = await confirmDialog('วันนี้อารมณ์เป็นยังไงหรอ\nลองเลือกดูมั้ย?', {
+          center: true, danger: false, confirmLabel: 'เลือกอารมณ์', cancelLabel: 'ข้ามไปก่อน',
+        });
+        if (goPick) return;
+      }
+
       saveBtn.disabled = true;
       saveBtn.textContent = 'กำลังบันทึก...';
 

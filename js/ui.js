@@ -12,7 +12,7 @@ function openSheet(titleText, bodyEl, opts = {}) {
   const sheet = el(`
     <div class="sheet">
       <div class="sheet-handle"></div>
-      <div class="sheet-title"><span>${escapeHtml(titleText)}</span><button class="x">${icon('close', 16)}</button></div>
+      <div class="sheet-title${opts.centerTitle ? ' centered' : ''}"><span>${escapeHtml(titleText)}</span><button class="x">${icon('close', 16)}</button></div>
       <div class="sheet-body"></div>
     </div>
   `);
@@ -32,7 +32,7 @@ function toast(msg) {
 }
 
 function confirmDialog(message, opts = {}) {
-  const { icons = false, danger = true, confirmLabel = 'ลบ', cancelLabel = 'ยกเลิก' } = opts;
+  const { icons = false, danger = true, confirmLabel = 'ลบ', cancelLabel = 'ยกเลิก', center = false } = opts;
   return new Promise((resolve) => {
     const noInner = icons ? icon('close', 20) : escapeHtml(cancelLabel);
     const yesInner = icons ? icon('check', 20) : escapeHtml(confirmLabel);
@@ -44,7 +44,7 @@ function confirmDialog(message, opts = {}) {
         </div>
       </div>
     `);
-    const { close } = openSheet(message, body);
+    const { close } = openSheet(message, body, { centerTitle: center });
     body.querySelector('#cf-no').addEventListener('click', () => { close(); resolve(false); });
     body.querySelector('#cf-yes').addEventListener('click', () => { close(); resolve(true); });
   });
