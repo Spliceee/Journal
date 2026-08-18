@@ -209,7 +209,7 @@ const TasksView = (() => {
       dayTasks.slice(0, MAX_LABELS).forEach((t) => {
         const cat = catById(t.categoryId);
         const color = cat ? cat.color : TASK_DOT;
-        const label = cat ? cat.name : 'งาน';
+        const label = t.content || (cat ? cat.name : 'งาน');
         eventsWrap.appendChild(el(`<span class="cal-day-chip" style="background:${color}">${escapeHtml(label)}</span>`));
       });
       if (dayTasks.length > MAX_LABELS) {
