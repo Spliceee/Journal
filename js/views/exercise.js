@@ -167,6 +167,7 @@ const ExerciseView = (() => {
         date: formatDateNumeric(entry.date),
         title: cat ? cat.name : null,
         text: entry.notes,
+        noCrop: true,
       }));
       row.appendChild(img);
       card.appendChild(row);

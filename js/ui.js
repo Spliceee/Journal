@@ -273,11 +273,14 @@ function openLightbox(photos, startIndex = 0, meta = null, actions = null) {
 
   // Extreme aspect-ratio uploads (e.g. 9:16 phone shots) leave huge letterbox
   // bars in the popup; crop those down to a friendlier ratio in this view only —
-  // 4:3 for wide/landscape shots, 3:4 for tall/portrait shots.
+  // 4:3 for wide/landscape shots, 3:4 for tall/portrait shots. Callers that want
+  // the untouched original (e.g. the exercise tab) pass meta.noCrop.
+  const allowCrop = !(meta && meta.noCrop);
   imgEl.addEventListener('load', () => {
+    media.classList.remove('lb-media-cropped-portrait', 'lb-media-cropped-landscape');
+    if (!allowCrop) return;
     const w = imgEl.naturalWidth;
     const h = imgEl.naturalHeight;
-    media.classList.remove('lb-media-cropped-portrait', 'lb-media-cropped-landscape');
     if (w > 0 && h > 0) {
       const ratio = h / w;
       if (ratio >= 1.5) media.classList.add('lb-media-cropped-portrait');
