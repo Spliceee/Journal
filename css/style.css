@@ -423,7 +423,8 @@ html, body {
 .lb-actions button.danger { color: #dc2626; }
 .lb-media { position: relative; background: #000; flex-shrink: 0; }
 .lb-media .lb-img { width: 100%; max-height: 46vh; object-fit: contain; display: block; user-select: none; }
-.lb-media.lb-media-cropped .lb-img { aspect-ratio: 3 / 4; height: auto; max-height: 60vh; object-fit: cover; }
+.lb-media.lb-media-cropped-portrait .lb-img { aspect-ratio: 3 / 4; height: auto; max-height: 60vh; object-fit: cover; }
+.lb-media.lb-media-cropped-landscape .lb-img { aspect-ratio: 4 / 3; height: auto; max-height: 60vh; object-fit: cover; }
 .lb-nav {
   position: absolute; top: 50%; transform: translateY(-50%);
   border: none; background: rgba(255,255,255,0.2); color: #fff;

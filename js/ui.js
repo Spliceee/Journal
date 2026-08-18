@@ -256,18 +256,23 @@ function openLightbox(photos, startIndex = 0, meta = null, actions = null) {
     if (meta.text) caption.querySelector('.lb-text').textContent = meta.text;
   }
 
-  // Very tall uploads (e.g. 9:16 phone screenshots) leave huge letterbox
-  // bars in the popup; crop those down to a friendlier 3:4 in this view only.
+  // Extreme aspect-ratio uploads (e.g. 9:16 phone shots) leave huge letterbox
+  // bars in the popup; crop those down to a friendlier ratio in this view only —
+  // 4:3 for wide/landscape shots, 3:4 for tall/portrait shots.
   imgEl.addEventListener('load', () => {
     const w = imgEl.naturalWidth;
     const h = imgEl.naturalHeight;
-    const tall = w > 0 && h / w >= 1.5;
-    media.classList.toggle('lb-media-cropped', tall);
+    media.classList.remove('lb-media-cropped-portrait', 'lb-media-cropped-landscape');
+    if (w > 0 && h > 0) {
+      const ratio = h / w;
+      if (ratio >= 1.5) media.classList.add('lb-media-cropped-portrait');
+      else if (ratio <= 1 / 1.5) media.classList.add('lb-media-cropped-landscape');
+    }
   });
 
   function render() {
     const p = photos[idx];
-    media.classList.remove('lb-media-cropped');
+    media.classList.remove('lb-media-cropped-portrait', 'lb-media-cropped-landscape');
     imgEl.src = photoUrl(p);
     counter.textContent = `${idx + 1} / ${photos.length}`;
     const multi = photos.length > 1;
