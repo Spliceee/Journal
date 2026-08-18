@@ -263,7 +263,7 @@ html, body {
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
 }
 .field textarea { min-height: 90px; resize: vertical; }
@@ -451,7 +451,7 @@ html, body {
 .gal-search-icon { display: flex; color: var(--ink-soft); flex-shrink: 0; }
 .gal-search input {
   flex: 1; min-width: 0; border: none; background: transparent; font-family: inherit;
-  font-size: 14px; color: var(--ink); padding: 0;
+  font-size: 16px; color: var(--ink); padding: 0;
 }
 .gal-search input:focus { outline: none; }
 .gal-search input::placeholder { color: var(--ink-soft); }
