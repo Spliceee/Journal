@@ -57,10 +57,10 @@ const DiaryView = (() => {
       }
 
       if (!mood && (title || text)) {
-        const goPick = await confirmDialog('วันนี้อารมณ์เป็นยังไงหรอ\nลองเลือกดูมั้ย?', {
-          center: true, danger: false, confirmLabel: 'เลือกอารมณ์', cancelLabel: 'ข้ามไปก่อน',
+        await confirmDialog('วันนี้อารมณ์เป็นยังไงหรอ\nลองเลือกดูมั้ย?', {
+          center: true, danger: false, confirmLabel: 'เลือกอารมณ์', singleButton: true, stacked: true,
         });
-        if (goPick) return;
+        return;
       }
 
       saveBtn.disabled = true;

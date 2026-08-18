@@ -6,7 +6,12 @@ function closeSheet() {
 }
 
 function openSheet(titleText, bodyEl, opts = {}) {
-  const root = document.getElementById('modal-root');
+  // "stacked" dialogs get their own throwaway root instead of #modal-root, so
+  // opening one (e.g. a nudge on top of an already-open form sheet) doesn't
+  // wipe out whatever's already showing there.
+  const stacked = !!opts.stacked;
+  const root = stacked ? document.createElement('div') : document.getElementById('modal-root');
+  if (stacked) document.body.appendChild(root);
   root.innerHTML = '';
   const overlay = el(`<div class="overlay"></div>`);
   const sheet = el(`
@@ -17,11 +22,16 @@ function openSheet(titleText, bodyEl, opts = {}) {
     </div>
   `);
   sheet.querySelector('.sheet-body').appendChild(bodyEl);
-  sheet.querySelector('.x').addEventListener('click', closeSheet);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay && !opts.noBackdropClose) closeSheet(); });
+  function close() {
+    root.innerHTML = '';
+    if (stacked) root.remove();
+    if (opts.onClose) opts.onClose();
+  }
+  sheet.querySelector('.x').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay && !opts.noBackdropClose) close(); });
   overlay.appendChild(sheet);
   root.appendChild(overlay);
-  return { overlay, sheet, close: closeSheet };
+  return { overlay, sheet, close };
 }
 
 function toast(msg) {
@@ -32,21 +42,26 @@ function toast(msg) {
 }
 
 function confirmDialog(message, opts = {}) {
-  const { icons = false, danger = true, confirmLabel = 'ลบ', cancelLabel = 'ยกเลิก', center = false } = opts;
+  const {
+    icons = false, danger = true, confirmLabel = 'ลบ', cancelLabel = 'ยกเลิก',
+    center = false, singleButton = false, stacked = false,
+  } = opts;
   return new Promise((resolve) => {
+    let settled = false;
+    const settle = (v) => { if (!settled) { settled = true; resolve(v); } };
     const noInner = icons ? icon('close', 20) : escapeHtml(cancelLabel);
     const yesInner = icons ? icon('check', 20) : escapeHtml(confirmLabel);
     const body = el(`
       <div>
         <div style="display:flex;gap:10px;">
-          <button class="btn secondary block" id="cf-no">${noInner}</button>
+          ${singleButton ? '' : `<button class="btn secondary block" id="cf-no">${noInner}</button>`}
           <button class="btn ${danger ? 'danger' : ''} block" id="cf-yes">${yesInner}</button>
         </div>
       </div>
     `);
-    const { close } = openSheet(message, body, { centerTitle: center });
-    body.querySelector('#cf-no').addEventListener('click', () => { close(); resolve(false); });
-    body.querySelector('#cf-yes').addEventListener('click', () => { close(); resolve(true); });
+    const { close } = openSheet(message, body, { centerTitle: center, stacked, onClose: () => settle(false) });
+    if (!singleButton) body.querySelector('#cf-no').addEventListener('click', () => { settle(false); close(); });
+    body.querySelector('#cf-yes').addEventListener('click', () => { settle(true); close(); });
   });
 }
 
