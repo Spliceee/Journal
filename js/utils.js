@@ -108,6 +108,10 @@ const ICONS = {
   plus: '<path d="M12 4.5v15"/><path d="M4.5 12h15"/>',
   close: '<path d="M18 6 6 18"/><path d="M6 6l12 12"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  mail: '<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 7l9 6.5L21 7"/>',
+  lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>',
+  eye: '<path d="M2 12s3.7-7 10-7 10 7 10 7-3.7 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff: '<path d="M3 3l18 18"/><path d="M6.6 6.6C3.9 8.3 2 12 2 12s3.7 7 10 7c1.4 0 2.7-.3 3.8-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M14.1 6.1A9.7 9.7 0 0 1 12 5c6.3 0 10 7 10 7a17 17 0 0 1-2.3 3.2"/>',
   chevronLeft: '<path d="M15 18l-6-6 6-6"/>',
   chevronRight: '<path d="M9 18l6-6-6-6"/>',
 };

@@ -8,12 +8,25 @@ const AuthView = (() => {
     const wrap = el(`
       <div class="auth-wrap">
         <div class="auth-card">
-          <div class="auth-emoji">📔</div>
+          <div class="auth-logo">📔</div>
           <h1 class="auth-title">Daily Journal</h1>
           <p class="auth-sub" id="auth-sub">เข้าสู่ระบบเพื่อซิงค์ข้อมูลของคุณ</p>
 
-          <div class="field"><label>อีเมล</label><input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com"></div>
-          <div class="field"><label>รหัสผ่าน</label><input type="password" id="auth-password" autocomplete="current-password" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+          <div class="field">
+            <label>อีเมล</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">${icon('mail', 16)}</span>
+              <input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com">
+            </div>
+          </div>
+          <div class="field">
+            <label>รหัสผ่าน</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">${icon('lock', 16)}</span>
+              <input type="password" id="auth-password" autocomplete="current-password" placeholder="อย่างน้อย 6 ตัวอักษร">
+              <button type="button" class="input-icon-btn" id="auth-pass-toggle" tabindex="-1">${icon('eye', 16)}</button>
+            </div>
+          </div>
 
           <div class="auth-error" id="auth-error" style="display:none;"></div>
 
@@ -30,6 +43,13 @@ const AuthView = (() => {
     const errorEl = wrap.querySelector('#auth-error');
     const emailEl = wrap.querySelector('#auth-email');
     const passEl = wrap.querySelector('#auth-password');
+    const passToggleBtn = wrap.querySelector('#auth-pass-toggle');
+
+    passToggleBtn.addEventListener('click', () => {
+      const showing = passEl.type === 'text';
+      passEl.type = showing ? 'password' : 'text';
+      passToggleBtn.innerHTML = icon(showing ? 'eye' : 'eyeOff', 16);
+    });
 
     function applyMode() {
       subEl.textContent = mode === 'signin' ? 'เข้าสู่ระบบเพื่อซิงค์ข้อมูลของคุณ' : 'สร้างบัญชีใหม่เพื่อเริ่มบันทึก';
