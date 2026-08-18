@@ -35,6 +35,10 @@ async function render(route, params, isRetry) {
   qsa('.navbtn').forEach((b) => b.classList.toggle('active', b.dataset.route === route));
   window.scrollTo(0, 0);
   try {
+    // supabase-js resolves any in-flight token refresh here before returning —
+    // without this, firing several DB queries in parallel right after can race
+    // the refresh, so some requests grab the old (expired) token and 401.
+    await sb.auth.getSession();
     await Views[route].render(root, params || {});
   } catch (err) {
     console.error('Failed to load', route, err);
