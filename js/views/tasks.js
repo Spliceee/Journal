@@ -193,21 +193,27 @@ const TasksView = (() => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     for (let i = 0; i < startOffset; i++) calGridEl.appendChild(el(`<div class="cal-day empty"></div>`));
 
+    const MAX_LABELS = 3;
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${pad2(month + 1)}-${pad2(d)}`;
-      const dayTasks = dayMap[dateStr];
-      const btn = el(`<button type="button" class="cal-day"><span>${d}</span><span class="dots"></span></button>`);
+      const dayTasks = dayMap[dateStr] || [];
+      const btn = el(`
+        <button type="button" class="cal-day cal-day-labeled">
+          <span class="cal-day-num">${d}</span>
+          <div class="cal-day-events"></div>
+        </button>
+      `);
       if (dateStr === todayStr()) btn.classList.add('today');
       if (dateStr === filterDate) btn.classList.add('selected');
-      if (dayTasks) {
-        const dotsWrap = btn.querySelector('.dots');
-        const colors = [];
-        dayTasks.forEach((t) => {
-          const cat = catById(t.categoryId);
-          const color = cat ? cat.color : TASK_DOT;
-          if (!colors.includes(color)) colors.push(color);
-        });
-        colors.slice(0, 4).forEach((c) => dotsWrap.appendChild(el(`<span class="dot" style="background:${c}"></span>`)));
+      const eventsWrap = btn.querySelector('.cal-day-events');
+      dayTasks.slice(0, MAX_LABELS).forEach((t) => {
+        const cat = catById(t.categoryId);
+        const color = cat ? cat.color : TASK_DOT;
+        const label = cat ? cat.name : 'งาน';
+        eventsWrap.appendChild(el(`<span class="cal-day-chip" style="background:${color}">${escapeHtml(label)}</span>`));
+      });
+      if (dayTasks.length > MAX_LABELS) {
+        eventsWrap.appendChild(el(`<span class="cal-day-more">+${dayTasks.length - MAX_LABELS} เพิ่มเติม</span>`));
       }
       btn.addEventListener('click', () => selectDate(dateStr));
       calGridEl.appendChild(btn);
@@ -245,7 +251,7 @@ const TasksView = (() => {
           <button class="cal-nav-btn" id="tk-next-m">${icon('chevronRight', 16)}</button>
         </div>
       `);
-      calGridEl = el('<div class="cal-grid"></div>');
+      calGridEl = el('<div class="cal-grid cal-grid-labeled"></div>');
       calTitleEl = calHeader.querySelector('#tk-cal-title');
       root.appendChild(calHeader);
       root.appendChild(calGridEl);
