@@ -31,14 +31,17 @@ function toast(msg) {
   setTimeout(() => t.remove(), 1800);
 }
 
-function confirmDialog(message) {
+function confirmDialog(message, opts = {}) {
+  const { icons = false, danger = true, confirmLabel = 'ลบ', cancelLabel = 'ยกเลิก' } = opts;
   return new Promise((resolve) => {
+    const noInner = icons ? icon('close', 20) : escapeHtml(cancelLabel);
+    const yesInner = icons ? icon('check', 20) : escapeHtml(confirmLabel);
     const body = el(`
       <div>
         <p style="font-size:14px;color:var(--ink);margin:0 0 18px;">${escapeHtml(message)}</p>
         <div style="display:flex;gap:10px;">
-          <button class="btn secondary block" id="cf-no">ยกเลิก</button>
-          <button class="btn danger block" id="cf-yes">ลบ</button>
+          <button class="btn secondary block" id="cf-no">${noInner}</button>
+          <button class="btn ${danger ? 'danger' : ''} block" id="cf-yes">${yesInner}</button>
         </div>
       </div>
     `);

@@ -107,6 +107,7 @@ const ICONS = {
   trash: '<path d="M4 6.5h16"/><path d="M8.5 6.5v-2a1.5 1.5 0 0 1 1.5-1.5h4a1.5 1.5 0 0 1 1.5 1.5v2"/><path d="M18.5 6.5 17.7 19a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8L5.5 6.5"/><path d="M10 10.5v6"/><path d="M14 10.5v6"/>',
   plus: '<path d="M12 4.5v15"/><path d="M4.5 12h15"/>',
   close: '<path d="M18 6 6 18"/><path d="M6 6l12 12"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   chevronLeft: '<path d="M15 18l-6-6 6-6"/>',
   chevronRight: '<path d="M9 18l6-6-6-6"/>',
 };

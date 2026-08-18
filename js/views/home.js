@@ -91,7 +91,7 @@ const HomeView = (() => {
 
     const signOutBtn = el('<button type="button" class="btn secondary block" style="margin-top:10px;">ออกจากระบบ</button>');
     signOutBtn.addEventListener('click', async () => {
-      const ok = await confirmDialog('ออกจากระบบหรือไม่?');
+      const ok = await confirmDialog('คุณต้องการออกจากระบบหรือไม่?', { icons: true, danger: false });
       if (ok) { closeSheet(); await signOut(); }
     });
 
