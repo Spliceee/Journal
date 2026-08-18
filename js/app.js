@@ -27,14 +27,34 @@ function navigate(route, params) {
 
 let _pendingParams = null;
 
-function render(route, params) {
+async function render(route, params, isRetry) {
   const root = document.getElementById('view-root');
   root.innerHTML = '';
   clearFab();
   document.getElementById('topbar-title').textContent = ROUTE_TITLES[route];
   qsa('.navbtn').forEach((b) => b.classList.toggle('active', b.dataset.route === route));
   window.scrollTo(0, 0);
-  Views[route].render(root, params || {});
+  try {
+    await Views[route].render(root, params || {});
+  } catch (err) {
+    console.error('Failed to load', route, err);
+    if (!isRetry) {
+      // most failures here are a one-off network/timing blip — try once more before bothering the user
+      setTimeout(() => render(route, params, true), 500);
+      return;
+    }
+    root.innerHTML = '';
+    const errState = el(`
+      <div class="empty-state">
+        <div class="big">⚠️</div>
+        <div class="txt">โหลดข้อมูลไม่สำเร็จ ลองเช็คอินเทอร์เน็ตแล้วลองใหม่</div>
+      </div>
+    `);
+    const retryBtn = el('<button class="btn" style="margin-top:14px;">ลองอีกครั้ง</button>');
+    retryBtn.addEventListener('click', () => render(route, params));
+    errState.appendChild(retryBtn);
+    root.appendChild(errState);
+  }
 }
 
 window.addEventListener('hashchange', () => {
