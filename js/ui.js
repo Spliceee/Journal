@@ -453,10 +453,26 @@ async function exportMomentImage({ photo, dateText, title, text }) {
   }
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92));
+  const filename = `daily-journal-${dateText.replace(/[^\d]/g, '-')}.jpg`;
+
+  // On phones, the share sheet's "Save Image" gets it into Photos/Camera Roll in
+  // one tap — a plain <a download> instead pops a generic "save to Files" dialog,
+  // which is what we're trying to avoid.
+  const file = new File([blob], filename, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file] });
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') return; // user backed out of the share sheet
+      // any other error (e.g. share permission lost) — fall through to the download link
+    }
+  }
+
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `daily-journal-${dateText.replace(/[^\d]/g, '-')}.jpg`;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   a.remove();
