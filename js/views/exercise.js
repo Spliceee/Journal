@@ -221,21 +221,27 @@ const ExerciseView = (() => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     for (let i = 0; i < startOffset; i++) calGridEl.appendChild(el(`<div class="cal-day empty"></div>`));
 
+    const MAX_LABELS = 3;
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${pad2(month + 1)}-${pad2(d)}`;
-      const dayEntries = dayMap[dateStr];
-      const btn = el(`<button type="button" class="cal-day"><span>${d}</span><span class="dots"></span></button>`);
+      const dayEntries = dayMap[dateStr] || [];
+      const btn = el(`
+        <button type="button" class="cal-day cal-day-labeled">
+          <span class="cal-day-num">${d}</span>
+          <div class="cal-day-events"></div>
+        </button>
+      `);
       if (dateStr === todayStr()) btn.classList.add('today');
       if (dateStr === filterDate) btn.classList.add('selected');
-      if (dayEntries) {
-        const dotsWrap = btn.querySelector('.dots');
-        const colors = [];
-        dayEntries.forEach((e) => {
-          const cat = catById(e.categoryId);
-          const color = cat ? cat.color : EXERCISE_DOT_FALLBACK;
-          if (!colors.includes(color)) colors.push(color);
-        });
-        colors.slice(0, 4).forEach((c) => dotsWrap.appendChild(el(`<span class="dot" style="background:${c}"></span>`)));
+      const eventsWrap = btn.querySelector('.cal-day-events');
+      dayEntries.slice(0, MAX_LABELS).forEach((e) => {
+        const cat = catById(e.categoryId);
+        const color = cat ? cat.color : EXERCISE_DOT_FALLBACK;
+        const label = cat ? cat.name : 'ออกกำลังกาย';
+        eventsWrap.appendChild(el(`<span class="cal-day-chip" style="background:${color}">${escapeHtml(label)}</span>`));
+      });
+      if (dayEntries.length > MAX_LABELS) {
+        eventsWrap.appendChild(el(`<span class="cal-day-more">+${dayEntries.length - MAX_LABELS} เพิ่มเติม</span>`));
       }
       btn.addEventListener('click', () => selectDate(dateStr));
       calGridEl.appendChild(btn);
@@ -272,7 +278,7 @@ const ExerciseView = (() => {
           <button class="cal-nav-btn" id="ex-next-m">${icon('chevronRight', 16)}</button>
         </div>
       `);
-      calGridEl = el('<div class="cal-grid"></div>');
+      calGridEl = el('<div class="cal-grid cal-grid-labeled"></div>');
       calTitleEl = calHeader.querySelector('#ex-cal-title');
       root.appendChild(calHeader);
       root.appendChild(calGridEl);
